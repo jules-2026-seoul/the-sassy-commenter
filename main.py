@@ -1,16 +1,28 @@
 import os
+import logging
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from google import genai
-from google.genai.errors import APIError
 
-app = FastAPI(title="Sassy Commenter API")
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("SassyAPI")
 
-# Initialize the Gemini client. It will automatically check the GEMINI_API_KEY environment
-# variable, or fall back to Application Default Credentials on Google Cloud.
+app = FastAPI(title="Sassy Commenter API", version="1.1.0")
+
+# Allow frontend to access this API without CORS blocking
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 try:
     client = genai.Client()
 except Exception as e:
+    logger.warning(f"Gemini Client initialization skipped: {e}")
     client = None
 
 class CalculationContext(BaseModel):
@@ -28,7 +40,7 @@ SYSTEM_INSTRUCTION = (
 @app.post("/attitude", response_model=SassyResponse)
 def generate_attitude(context: CalculationContext):
     if not client:
-        # Graceful fallback if client couldn't be initialized
+        logger.info("Using fallback response due to missing client.")
         return SassyResponse(response="Math is hard. You're doing great. 💅")
         
     prompt = f"Expression: {context.expression}\nResult: {context.result}\nProvide a sassy reaction."
@@ -41,5 +53,5 @@ def generate_attitude(context: CalculationContext):
         )
         return SassyResponse(response=response.text.strip())
     except Exception as e:
-        # Fallback phrase when the LLM call fails or key is invalid
+        logger.error(f"LLM Generation failed: {e}")
         return SassyResponse(response="Math is hard. You're doing great. 💅")
