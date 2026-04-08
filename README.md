@@ -9,7 +9,7 @@ This service relies on Google's Gemini models to generate sassy responses.
 ### 1. Obtain a Free API Key
 1. Visit [Google AI Studio](https://aistudio.google.com/).
 2. Sign in and click **Get API key**.
-3. Create a new API key in a new or existing Google Cloud project.
+3. Create a new API key in an existing Google Cloud project.
 
 ### 2. Local Development Setup
 To run this locally, configure your API key via environment variables:
