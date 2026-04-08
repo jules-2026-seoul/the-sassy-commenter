@@ -40,3 +40,4 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 docker build -t sassy-commenter .
 docker run -p 8000:8000 -e GEMINI_API_KEY=$GEMINI_API_KEY sassy-commenter
 ```
+## Version: 1.0.0
