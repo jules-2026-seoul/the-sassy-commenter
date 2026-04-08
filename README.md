@@ -9,7 +9,7 @@ This service relies on Google's Gemini models to generate sassy responses.
 ### 1. Obtain a Free API Key
 1. Visit [Google AI Studio](https://aistudio.google.com/).
 2. Sign in and click **Get API key**.
-3. Create a new API key in a new or existing Google Cloud project.
+3. Create a new API key in an existing Google Cloud project.
 
 ### 2. Local Development Setup
 To run this locally, configure your API key via environment variables:
@@ -31,8 +31,15 @@ GEMINI_API_KEY="your_api_key_here"
 
 ### Using Python and Uvicorn:
 ```bash
+# 1. Create and activate a virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# 2. Install dependencies
 pip install -r requirements.txt
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
+# 3. Run the Uvicorn dev server
+python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 ### Using Docker:
